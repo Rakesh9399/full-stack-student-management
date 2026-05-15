@@ -106,21 +106,22 @@ JWT_EXPIRES_IN=1d
 
 ### Frontend .env
 
-VITE_API_URL=http://localhost:5000/api
+VITE_SECRET_KEY=mySuperSecretKey
+VITE_API_URL=http://localhost:5000/api/v1
 
 ---
 
 ## API Routes
 
-POST /api/register
+POST /api/v1/register
 
-POST /api/login
+POST /api/v1/login
 
-GET /api/students
+GET /api/v1/students
 
-PUT /api/student/:id
+PUT /api/v1/student/:id
 
-DELETE /api/student/:id
+DELETE /api/v1/student/:id
 
 ---
 
