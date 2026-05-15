@@ -107,6 +107,7 @@ JWT_EXPIRES_IN=1d
 ### Frontend .env
 
 VITE_SECRET_KEY=mySuperSecretKey
+
 VITE_API_URL=http://localhost:5000/api/v1
 
 ---
