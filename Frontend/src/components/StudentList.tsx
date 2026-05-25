@@ -75,8 +75,18 @@ const StudentList = () => {
         );
 
       setStudents(decryptedStudents);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+
+      if (
+        error.response?.status === 401
+      ) {
+        localStorage.removeItem(
+          "token"
+        );
+
+        window.location.href = "/";
+      }
 
       toast.error(
         "Failed to fetch students"
@@ -247,7 +257,7 @@ const StudentList = () => {
 
             <tbody>
               {filteredStudents.length ===
-              0 ? (
+                0 ? (
                 <tr>
                   <td
                     colSpan={6}

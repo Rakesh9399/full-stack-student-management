@@ -1,12 +1,16 @@
+import Student from "../models/Student";
 import type {
   Request,
   Response,
   NextFunction,
 } from "express";
 
-import jwt from "jsonwebtoken";
 
-export const verifyToken = (
+import jwt, {
+  type JwtPayload,
+} from "jsonwebtoken";
+
+export const verifyToken = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -25,10 +29,25 @@ export const verifyToken = (
 
     const token = authHeader.split(" ")[1];
 
-    jwt.verify(
+    const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET as string
     );
+
+    const student =
+      await Student.findById(
+        (decoded as JwtPayload).id
+      );
+
+    if (!student) {
+      res.status(401).json({
+        success: false,
+        message:
+          "User no longer exists",
+      });
+
+      return;
+    }
 
     next();
   } catch (error) {

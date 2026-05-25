@@ -35,7 +35,7 @@ export const registerStudent = async (
         // Second level encryption
         const encryptedStudent = {
             fullName: encryptData(fullName),
-            email,
+            email: encryptData(email),
             phoneNumber: encryptData(phoneNumber),
             dateOfBirth: encryptData(dateOfBirth),
             gender: encryptData(gender),
@@ -73,7 +73,7 @@ export const getStudents = async (
             _id: student._id,
 
             fullName: decryptData(student.fullName),
-            email: student.email,
+            email: decryptData(student.email),
             phoneNumber: decryptData(student.phoneNumber),
             dateOfBirth: decryptData(student.dateOfBirth.toString()),
             gender: decryptData(student.gender),
@@ -105,13 +105,12 @@ export const updateStudent = async (
 
         const updatedData = {
             fullName: encryptData(req.body.fullName),
-            email: req.body.email,
+            email: encryptData(req.body.email),
             phoneNumber: encryptData(req.body.phoneNumber),
             dateOfBirth: encryptData(req.body.dateOfBirth),
             gender: encryptData(req.body.gender),
             address: encryptData(req.body.address),
             courseEnrolled: encryptData(req.body.courseEnrolled),
-            password: encryptData(req.body.password),
         };
 
         const updatedStudent = await Student.findByIdAndUpdate(
@@ -177,7 +176,12 @@ export const loginStudent = async (
         }
 
         // Find user by email
-        const student = await Student.findOne({ email });
+        const students = await Student.find();
+
+        const student = students.find(
+            (student) =>
+                decryptData(student.email) === email
+        );
 
         if (!student) {
             res.status(404).json({
@@ -196,7 +200,7 @@ export const loginStudent = async (
             decryptData(firstDecrypt);
 
         // Compare password
-        if (originalPassword  !== password) {
+        if (originalPassword !== password) {
             res.status(401).json({
                 success: false,
                 message: "Invalid password",
